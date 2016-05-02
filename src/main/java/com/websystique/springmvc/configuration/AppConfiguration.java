@@ -1,5 +1,10 @@
 package com.websystique.springmvc.configuration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -12,7 +17,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "com.websystique.springmvc")
-public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
+public class AppConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
@@ -27,5 +32,15 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 	}
-
+	
+	@Bean(destroyMethod = "close")
+	public EntityManagerFactory getEntityManagerFactory(){
+		return Persistence.createEntityManagerFactory("FinanceiroPU");
+	}
+	
+	@Bean(destroyMethod = "close")
+	public EntityManager getEntityManager(EntityManagerFactory entityManagerFactory){
+		return entityManagerFactory.createEntityManager();
+	}
+	
 }

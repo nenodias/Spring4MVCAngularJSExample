@@ -18,7 +18,7 @@ import com.websystique.springmvc.model.User;
 import com.websystique.springmvc.service.UserService;
 
 @RestController
-public class HelloWorldRestController {
+public class UserRestController {
 
 	@Autowired
 	private UserService userService;

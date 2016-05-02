@@ -2,7 +2,7 @@
     'use strict';
 	angular.module('myApp')
 	.factory('UserService', ['$http', '$q', function($http, $q){
-		var raiz = 'http://localhost:8080/Spring4MVCAngularJSExample';
+		var raiz = 'http://localhost:8080/spring-financeiro';
 		var trataResposta = function(response){
 			return response.data;
 		};
