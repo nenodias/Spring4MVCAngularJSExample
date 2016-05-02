@@ -1,2 +1,2 @@
-# Spring4MVCAngularJSExample
+# spring-financeiro
 Spring MVC + Angular JS Example
