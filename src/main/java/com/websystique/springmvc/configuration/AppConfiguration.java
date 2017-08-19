@@ -1,12 +1,15 @@
 package com.websystique.springmvc.configuration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -14,8 +17,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import com.mchange.v2.c3p0.DriverManagerDataSource;
+
 @Configuration
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan(basePackages = "com.websystique.springmvc")
 public class AppConfiguration extends WebMvcConfigurerAdapter {
 
@@ -33,14 +39,45 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
 	}
 	
-	@Bean(destroyMethod = "close")
-	public EntityManagerFactory getEntityManagerFactory(){
-		return Persistence.createEntityManagerFactory("FinanceiroPU");
+	@Bean
+	public DataSource dataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource(true);
+		dataSource.setDriverClass("org.sqlite.JDBC");
+		dataSource.setJdbcUrl("jdbc:sqlite:banco.db");
+		dataSource.setUser("");
+		dataSource.setPassword("");		
+		return dataSource;
 	}
 	
-	@Bean(destroyMethod = "close")
-	public EntityManager getEntityManager(EntityManagerFactory entityManagerFactory){
-		return entityManagerFactory.createEntityManager();
+	@Bean
+	public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
+		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+		sessionFactory.setDataSource(dataSource);
+		sessionFactory.setPackagesToScan("com.websystique.springmvc");
+		
+		Properties properties = new Properties();
+		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect");
+		properties.setProperty("hibernate.show_sql", "true");
+		properties.setProperty("hibernate.format_sql", "true");
+		properties.setProperty("hibernate.hbm2ddl.auto","update");
+		
+		properties.setProperty("hibernate.connection.characterEncoding","ISO-8859-1");
+		
+		properties.setProperty("hibernate.c3p0.min_size","50");
+		properties.setProperty("hibernate.c3p0.max_size","200");
+		properties.setProperty("hibernate.c3p0.timeout","300");
+		properties.setProperty("hibernate.c3p0.max_statements","50");
+		properties.setProperty("hibernate.c3p0.idle_test_period","3000");
+		
+
+		sessionFactory.setHibernateProperties(properties);
+		return sessionFactory;
 	}
 	
+	@Bean
+	public HibernateTransactionManager transactionManager(LocalSessionFactoryBean sessionFactory) {
+		HibernateTransactionManager manager = new HibernateTransactionManager();
+		manager.setSessionFactory(sessionFactory.getObject());
+		return manager;
+	}
 }
