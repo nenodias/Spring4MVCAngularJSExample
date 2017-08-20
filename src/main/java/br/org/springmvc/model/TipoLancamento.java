@@ -1,4 +1,4 @@
-package com.websystique.springmvc.model;
+package br.org.springmvc.model;
 
 public enum TipoLancamento {
 

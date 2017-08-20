@@ -1,4 +1,4 @@
-package com.websystique.springmvc.controller;
+package br.org.springmvc.controller;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.websystique.springmvc.model.User;
-import com.websystique.springmvc.service.UserService;
+import br.org.springmvc.model.User;
+import br.org.springmvc.service.UserService;
 
 @RestController
 public class UserRestController {

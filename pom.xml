@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.websystique.springmvc</groupId>
+    <groupId>br.org.springmvc</groupId>
     <artifactId>spring-financeiro</artifactId>
     <packaging>war</packaging>
     <version>1.0.0</version>
-    <name>Spring4MVCAngularJSExample Maven Webapp</name>
+    <name>spring-financeiro</name>
  
     <properties>
         <springframework.version>4.3.10.RELEASE</springframework.version>
@@ -129,9 +129,23 @@
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
                 </plugin>
+                <plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>9.2.11.v20150529</version>
+					<configuration>
+						<scanIntervalSeconds>10</scanIntervalSeconds>
+						<webApp>
+						     <contextPath>/${project.artifactId}</contextPath>
+						</webApp>
+						<httpConnector>
+							<port>8080</port>
+			        	</httpConnector>
+					</configuration>
+				</plugin>
             </plugins>
         </pluginManagement>
  
-        <finalName>Spring4MVCAngularJSExample</finalName>
+        <finalName>${project.artifactId}</finalName>
     </build>
 </project>

@@ -1,4 +1,4 @@
-package com.websystique.springmvc.configuration;
+package br.org.springmvc.configuration;
 
 import java.util.Properties;
 
@@ -22,7 +22,7 @@ import com.mchange.v2.c3p0.DriverManagerDataSource;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.websystique.springmvc")
+@ComponentScan(basePackages = "br.org.springmvc")
 public class AppConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override
@@ -53,7 +53,7 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
 	public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource);
-		sessionFactory.setPackagesToScan("com.websystique.springmvc");
+		sessionFactory.setPackagesToScan("br.org.springmvc");
 		
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLiteDialect");
