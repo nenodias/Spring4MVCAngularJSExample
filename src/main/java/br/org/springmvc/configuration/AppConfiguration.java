@@ -2,21 +2,32 @@ package br.org.springmvc.configuration;
 
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import com.mchange.v2.c3p0.DriverManagerDataSource;
 
@@ -24,17 +35,41 @@ import com.mchange.v2.c3p0.DriverManagerDataSource;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan(basePackages = "br.org.springmvc")
-public class AppConfiguration extends WebMvcConfigurerAdapter {
+public class AppConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 	
 	@Value("${STATIC_ROOT:/opt/static/}")
 	private String staticRoot;
+	
+	private ApplicationContext applicationContext;
+	
+	@Bean
+	public ITemplateResolver templateResolver(ServletContext servletContext) {
+		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+		templateResolver.setPrefix("/WEB-INF/views/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode(TemplateMode.HTML);
+		return templateResolver;
+	}
+	
+	@Bean
+	public TemplateEngine templateEngine(ITemplateResolver templateResolver) {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.addTemplateResolver(templateResolver);
+		return templateEngine;
+	}
+	
+	@Bean
+	public ThymeleafViewResolver viewResolver(TemplateEngine templateEngine) {
+		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+		viewResolver.setTemplateEngine(templateEngine);
+		viewResolver.setApplicationContext(applicationContext);
+		viewResolver.setOrder(1);
+		return viewResolver;
+	}
 
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
-		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setViewClass(JstlView.class);
-		viewResolver.setPrefix("/WEB-INF/views/");
-		viewResolver.setSuffix(".jsp");
+		ViewResolver viewResolver = applicationContext.getBean(ThymeleafViewResolver.class);
 		registry.viewResolver(viewResolver);
 	}
 
@@ -83,5 +118,10 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
 		HibernateTransactionManager manager = new HibernateTransactionManager();
 		manager.setSessionFactory(sessionFactory.getObject());
 		return manager;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 }
