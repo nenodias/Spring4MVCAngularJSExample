@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,9 @@ import com.mchange.v2.c3p0.DriverManagerDataSource;
 @EnableTransactionManagement
 @ComponentScan(basePackages = "br.org.springmvc")
 public class AppConfiguration extends WebMvcConfigurerAdapter {
+	
+	@Value("${STATIC_ROOT:/opt/static/}")
+	private String staticRoot;
 
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
@@ -36,7 +40,7 @@ public class AppConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+		registry.addResourceHandler("/static/**").addResourceLocations("file:"+staticRoot,"/static/");
 	}
 	
 	@Bean
