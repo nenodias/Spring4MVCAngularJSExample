@@ -1,4 +1,4 @@
-package br.org.springmvc.service;
+package br.org.springmvc.service.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.org.springmvc.model.User;
+import br.org.springmvc.service.UserService;
 
 @Service("userService")
 @Transactional

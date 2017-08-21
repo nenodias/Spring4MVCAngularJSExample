@@ -8,15 +8,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "pessoa")
-public class Pessoa implements Serializable{
+public class Pessoa implements AppModel<Pessoa, Long>, Serializable{
 	
 	private static final long serialVersionUID = 7250869225401865610L;
 
@@ -64,5 +64,14 @@ public class Pessoa implements Serializable{
 		.append(nome)
 		.toHashCode()
 		;
+	}
+
+	@Override
+	public Long getPK() {
+		return id;
+	}
+	@Override
+	public void merge(Pessoa other) {
+		this.nome = other.nome;		
 	}
 }

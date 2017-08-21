@@ -16,16 +16,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "lancamento")
-public class Lancamento implements Serializable{
+public class Lancamento implements AppModel<Lancamento, Long>, Serializable{
 	
 	private static final long serialVersionUID = 3814511533820259953L;
 
@@ -143,5 +143,19 @@ public class Lancamento implements Serializable{
 		.toHashCode()
 		;
 	}
-	
+
+	@Override
+	public Long getPK() {
+		return id;
+	}
+
+	@Override
+	public void merge(Lancamento other) {
+		this.pessoa = other.pessoa;
+		this.descricao = other.descricao;
+		this.descricao = other.descricao;
+		this.tipo = other.tipo;
+		this.dataVencimento = other.dataVencimento;
+		this.dataPagamento = other.dataPagamento;
+	}
 }

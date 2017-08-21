@@ -1,8 +1,22 @@
 package br.org.springmvc.model;
 
-public class User {
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user")
+public class User implements AppModel<User, Long>, Serializable {
 	 
-    private long id;
+	private static final long serialVersionUID = -1135164072724462387L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
      
     private String username;
      
@@ -11,21 +25,20 @@ public class User {
     private String email;
      
     public User(){
-        id=0;
     }
      
-    public User(long id, String username, String address, String email){
+    public User(Long id, String username, String address, String email){
         this.id = id;
         this.username = username;
         this.address = address;
         this.email = email;
     }
  
-    public long getId() {
+    public Long getId() {
         return id;
     }
  
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
  
@@ -80,6 +93,18 @@ public class User {
         return "User [id=" + id + ", username=" + username + ", address=" + address
                 + ", email=" + email + "]";
     }
+
+	@Override
+	public Long getPK() {
+		return id;
+	}
+
+	@Override
+	public void merge(User other) {
+		this.username = other.username;
+		this.address = other.address;
+		this.email = other.email;
+	}
      
  
      
