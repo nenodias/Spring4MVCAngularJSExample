@@ -4,27 +4,27 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Angular JS $http Example</title>
 	<style>
-		.username.ng-valid {
+		input.ng-valid, select.ng-valid, textarea.ng-valid {
 			background-color: lightgreen;
 		}
 		
-		.username.ng-dirty.ng-invalid-required {
+		input.ng-dirty.ng-invalid-required, select.ng-dirty.ng-invalid-required, textarea.ng-dirty.ng-invalid-required {
 			background-color: red;
 		}
 		
-		.username.ng-dirty.ng-invalid-minlength {
+		input.ng-dirty.ng-invalid-minlength {
 			background-color: yellow;
 		}
 		
-		.email.ng-valid {
+		input.ng-valid {
 			background-color: lightgreen;
 		}
 		
-		.email.ng-dirty.ng-invalid-required {
+		input.ng-dirty.ng-invalid-required {
 			background-color: red;
 		}
 		
-		.email.ng-dirty.ng-invalid-email {
+		input.ng-dirty.ng-invalid-email {
 			background-color: yellow;
 		}
 	</style>
@@ -32,14 +32,14 @@
     <link th:src="@{/static/css/app.css}" rel="stylesheet"></link>
 </head>
 <body ng-app="myApp" class="ng-cloak">
-	<div class="generic-container" ng-controller="UserController as ctrl">
+	<div class="container-fluid" ng-controller="UserController as ctrl">
 		<div class="panel panel-default">
 			
 			<div class="panel-heading">
 				<span class="lead">Formulário de Cadastro de Usuário</span>
 			</div>
 			
-			<div class="formcontainer">
+			<div class="panel-body">
 				<!-- Formulário -->
 				<form ng-submit="ctrl.submit()" name="myForm" id="myForm" class="form-horizontal">
 					<input type="hidden" ng-model="ctrl.user.id" />
@@ -85,7 +85,7 @@
 					</div>
 					
 					<div class="row">
-						<div class=" form-actions floatRight">
+						<div class="form-group col-md-12 pull-right">
 							<input type="submit" value="{{!ctrl.user.id ? 'Inserir' : 'Atualizar'}}"
 								class="btn btn-primary btn-sm" 
 								ng-disabled="myForm.$invalid" 
@@ -109,7 +109,7 @@
 					Lista de Usuários
 				</span>
 			</div>
-			<div class="tablecontainer">
+			<div class="panel-body">
 				<table class="table table-hover">
 					<thead>
 						<tr>
